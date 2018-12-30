@@ -1,0 +1,7 @@
+[package]
+name = "computer_v1"
+version = "0.1.0"
+authors = ["Clementine Urquizar <clementine.urquizar@gmail.com>"]
+edition = "2018"
+
+[dependencies]
