@@ -103,10 +103,9 @@ fn get_exponent(word: & String) -> Result<u32, String> {
         return Ok(1)
     }
     let substr = &word[2..];
-    if substr.parse::<u32>().is_err() {
-        Err(format!("Error: {}: Invalid exponent", word))
-    } else {
-        Ok(substr.parse::<u32>().unwrap())
+    match substr.parse::<u32>() {
+        Err(_) => Err(format!("Error: {}: Invalid exponent", word)),
+        Ok(value) => Ok(value),
     }
 }
 
@@ -148,10 +147,10 @@ fn main() {
 
         println!("{}", token_to_str(& token)); // DEBUG
 
-        match check_unknown_token(& token) {
-            Err(e) => exit_with_error(e),
-            Ok(_) => (),
+        if let Err(e) = check_unknown_token(& token) {
+            exit_with_error(e)
         }
+
         if token.role == TokenType::Indeterminate {
             match get_exponent(&token.word) {
                 Ok(expo) => println!("exponent = {}", expo), //DEBUG
