@@ -1,4 +1,4 @@
-#[derive(PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq)]
 enum TokenType {
     Unknown,
     SeparationOp,
@@ -57,6 +57,41 @@ fn get_token_role(s: String) -> TokenType {
     } else {
         TokenType::Unknown
     }
+}
+
+#[test]
+fn test_get_token_role() {
+    assert_eq!(get_token_role("+".to_string()),                     TokenType::SeparationOp);
+    assert_eq!(get_token_role("++".to_string()),                    TokenType::Unknown);
+    assert_eq!(get_token_role("+-".to_string()),                    TokenType::Unknown);
+    assert_eq!(get_token_role("+-".to_string()),                    TokenType::Unknown);
+
+    assert_eq!(get_token_role("*".to_string()),                     TokenType::FactorOp);
+    assert_eq!(get_token_role("**".to_string()),                    TokenType::Unknown);
+
+    assert_eq!(get_token_role("3".to_string()),                     TokenType::Coefficient);
+    assert_eq!(get_token_role("-3".to_string()),                    TokenType::Coefficient);
+    assert_eq!(get_token_role("+3".to_string()),                    TokenType::Coefficient);
+    assert_eq!(get_token_role("3u".to_string()),                    TokenType::Unknown);
+    assert_eq!(get_token_role("3.".to_string()),                    TokenType::Coefficient);
+    assert_eq!(get_token_role("13.2".to_string()),                  TokenType::Coefficient);
+    assert_eq!(get_token_role("-1344.2444484948484".to_string()),   TokenType::Coefficient);
+    assert_eq!(get_token_role("44.24dd4444".to_string()),           TokenType::Unknown);
+    assert_eq!(get_token_role(".254".to_string()),                  TokenType::Coefficient);
+    assert_eq!(get_token_role("-.254".to_string()),                 TokenType::Coefficient);
+    assert_eq!(get_token_role("+.254+".to_string()),                TokenType::Unknown);
+
+    assert_eq!(get_token_role("X".to_string()),                     TokenType::Indeterminate);
+    assert_eq!(get_token_role("X^1".to_string()),                   TokenType::Indeterminate);
+    assert_eq!(get_token_role("X^2".to_string()),                   TokenType::Indeterminate);
+    assert_eq!(get_token_role("X^-1".to_string()),                  TokenType::Indeterminate);
+    assert_eq!(get_token_role("X^a".to_string()),                   TokenType::Indeterminate);
+    assert_eq!(get_token_role("X^a1".to_string()),                  TokenType::Indeterminate);
+    assert_eq!(get_token_role("XX^3".to_string()),                  TokenType::Unknown);
+    assert_eq!(get_token_role("-X^3".to_string()),                  TokenType::Unknown);
+
+    assert_eq!(get_token_role("/".to_string()),                     TokenType::Unknown);
+    assert_eq!(get_token_role("%".to_string()),                     TokenType::Unknown);
 }
 
 fn main() {
