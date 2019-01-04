@@ -1,5 +1,3 @@
-use std::process;
-
 #[derive(Debug, PartialEq, Eq)]
 enum TokenType {
     Unknown,
@@ -131,7 +129,6 @@ fn test_get_exponent() {
 
 fn exit_with_error(error: String) {
     eprintln!("{}", error);
-    process::exit(1)
 }
 
 fn syntax_error_msg(word: &String) -> String {
@@ -226,10 +223,8 @@ fn check_syntax(tokens: &Vec<Token>) -> Result<(), String> {
     Ok(())
 }
 
-fn main() {
-    let split = "3 + 2 * X^1 - +4 * X + -2 * X^2".split_whitespace();
-    // let split = "3 + 2 * X^-1 - +4 * X + -2 * X^2".split_whitespace();
-    // let split = "3.5678 ++ 2a * X^1 - +4 * X + -02 * X^2".split_whitespace();
+fn tokenization(s: String) -> Result<Vec<Token>, String> {
+    let split = s.split_whitespace();
     let words_vec: Vec<&str> = split.collect();
     let mut tokens: Vec<Token> = Vec::new();
 
@@ -240,21 +235,30 @@ fn main() {
         println!("{}", token_to_str(&token)); // DEBUG
 
         if let Err(e) = check_unknown_token(&token) {
-            exit_with_error(e);
+            return Err(e)
         }
 
         if is_indeterminate(&token) {
             match get_exponent(&token.word) {
                 Ok(expo) => println!("exponent = {}", expo), //DEBUG
-                Err(e) => exit_with_error(e),
+                Err(e) => return Err(e),
             }
         }
 
         tokens.push(token);
     }
+    Ok(tokens)
+}
 
+fn main() {
+    let s = "3 + 2 * X^1 - +4 * X + -2 * X^2".to_string();
+    // let s = "3.5678 ++ 2a * X^1 - +4 * X + -02 * X^2".to_string();
+    let tokens = match tokenization(s) {
+        Ok(t) => t,
+        Err(e) => return exit_with_error(e),
+    };
     if let Err(e) = check_syntax(&tokens) {
-        exit_with_error(e);
+        return exit_with_error(e);
     }
     // TODO: check exponent du polynome
     // Exemple tests check syntax
