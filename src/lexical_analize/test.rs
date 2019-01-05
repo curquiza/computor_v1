@@ -39,23 +39,23 @@ mod test {
     }
 
     #[test]
-    fn test_get_exponent() {
-        assert_eq!(lexical_analize::get_exponent(&"X".to_string()), Ok(1));
-        assert_eq!(lexical_analize::get_exponent(&"X^1".to_string()), Ok(1));
-        assert_eq!(lexical_analize::get_exponent(&"X^0".to_string()), Ok(0));
-        assert_eq!(lexical_analize::get_exponent(&"X^+1".to_string()), Ok(1));
-        assert_eq!(lexical_analize::get_exponent(&"X^13".to_string()), Ok(13));
-        assert_eq!(lexical_analize::get_exponent(&"X^1352882".to_string()), Ok(1352882));
+    fn test_check_exponent() {
+        assert!(lexical_analize::check_exponent(&"X".to_string()).is_ok());
+        assert!(lexical_analize::check_exponent(&"X^1".to_string()).is_ok());
+        assert!(lexical_analize::check_exponent(&"X^0".to_string()).is_ok());
+        assert!(lexical_analize::check_exponent(&"X^+1".to_string()).is_ok());
+        assert!(lexical_analize::check_exponent(&"X^13".to_string()).is_ok());
+        assert!(lexical_analize::check_exponent(&"X^1352882".to_string()).is_ok());
 
-        assert!(lexical_analize::get_exponent(&"X^".to_string()).is_err());
-        assert!(lexical_analize::get_exponent(&"X^^".to_string()).is_err());
-        assert!(lexical_analize::get_exponent(&"X^X".to_string()).is_err());
-        assert!(lexical_analize::get_exponent(&"X^-1".to_string()).is_err());
-        assert!(lexical_analize::get_exponent(&"X^++1".to_string()).is_err());
-        assert!(lexical_analize::get_exponent(&"X^a1".to_string()).is_err());
-        assert!(lexical_analize::get_exponent(&"X^2.5".to_string()).is_err());
-        assert!(lexical_analize::get_exponent(&"X^-2.5".to_string()).is_err());
-        assert!(lexical_analize::get_exponent(&"X^1/5".to_string()).is_err());
+        assert!(lexical_analize::check_exponent(&"X^".to_string()).is_err());
+        assert!(lexical_analize::check_exponent(&"X^^".to_string()).is_err());
+        assert!(lexical_analize::check_exponent(&"X^X".to_string()).is_err());
+        assert!(lexical_analize::check_exponent(&"X^-1".to_string()).is_err());
+        assert!(lexical_analize::check_exponent(&"X^++1".to_string()).is_err());
+        assert!(lexical_analize::check_exponent(&"X^a1".to_string()).is_err());
+        assert!(lexical_analize::check_exponent(&"X^2.5".to_string()).is_err());
+        assert!(lexical_analize::check_exponent(&"X^-2.5".to_string()).is_err());
+        assert!(lexical_analize::check_exponent(&"X^1/5".to_string()).is_err());
     }
 
     #[test]

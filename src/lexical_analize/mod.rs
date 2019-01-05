@@ -29,14 +29,14 @@ fn check_unknown_token(token: &token::Token) -> Result<(), String> {
     }
 }
 
-fn get_exponent(word: &String) -> Result<u32, String> {
+fn check_exponent(word: &String) -> Result<(), String> {
     if word == "X" {
-        return Ok(1)
+        return Ok(())
     }
     let substr = &word[2..];
     match substr.parse::<u32>() {
         Err(_) => Err(format!("Lexical error: {}: Invalid exponent", word)),
-        Ok(value) => Ok(value),
+        Ok(_) => Ok(()),
     }
 }
 
@@ -45,9 +45,8 @@ fn handle_lexical_errors(token: &token::Token) -> Result<(), String> {
         return Err(e)
     }
     if token::is_indeterminate(&token) {
-        match get_exponent(&token.word) {
-            Ok(expo) => { println!("exponent = {}", expo); return Ok(()) }, //DEBUG
-            Err(e) => return Err(e),
+        if let Err(e) = check_exponent(&token.word) {
+            return Err(e);
         }
     }
     Ok(())
@@ -67,5 +66,6 @@ pub fn tokenize(s: String) -> Result<Vec<token::Token>, String> {
         }
         tokens.push(token);
     }
+
     Ok(tokens)
 }
