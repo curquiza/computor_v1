@@ -14,7 +14,7 @@ fn syntax_error_msg(word: &String) -> String {
  */
 
 fn check_operator_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), String> {
-    println!("OPERATOR : i = {}, token.word = {}", pos, tokens[pos].word);
+    println!("OPERATOR : i = {}, token.word = {}", pos, tokens[pos].word); //DEBUG
     if pos == 0 || pos == tokens.len() - 1                                              // at the end or at start
         || token::is_operator(&tokens[pos - 1]) || token::is_operator(&tokens[pos + 1]) {             // sides are operators
         return Err(syntax_error_msg(& tokens[pos].word))
@@ -35,7 +35,7 @@ fn check_operator_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), S
  ** - if both sides are the same operators, it must be a SeparationOp (+)
  */
 fn check_member_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), String> {
-    println!("MEMBER : i = {}, token.word = {}", pos, tokens[pos].word);
+    println!("MEMBER : i = {}, token.word = {}", pos, tokens[pos].word); //DEBUG
     if pos == 0 {                                                           // at start
         if tokens.len() == 1 || token::is_operator(&tokens[pos + 1]) {
             return Ok(())
