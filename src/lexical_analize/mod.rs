@@ -23,7 +23,7 @@ fn get_token_role(s: String) -> token::Type {
 
 fn check_unknown_token(token: &token::Token) -> Result<(), String> {
     if token::is_unknown(&token) {
-        Err(format!("Error: {}: Unexpected token", token.word))
+        Err(format!("Lexical error: {}: Unexpected token", token.word))
     } else {
         Ok(())
     }
@@ -35,7 +35,7 @@ fn get_exponent(word: &String) -> Result<u32, String> {
     }
     let substr = &word[2..];
     match substr.parse::<u32>() {
-        Err(_) => Err(format!("Error: {}: Invalid exponent", word)),
+        Err(_) => Err(format!("Lexical error: {}: Invalid exponent", word)),
         Ok(value) => Ok(value),
     }
 }

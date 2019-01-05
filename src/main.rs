@@ -34,5 +34,4 @@ fn main() -> Result<(), Box<std::error::Error>> {
     // TODO: resoudre
     // TODO: implenter display pour token
     // TODO: retoun erreur du main chelou avec .into()
-    // TODO: change error messages
 }

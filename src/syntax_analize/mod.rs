@@ -2,7 +2,7 @@ use crate::token;
 mod test;
 
 fn syntax_error_msg(word: &String) -> String {
-    format!("Syntax error near \"{}\" token", word)
+    format!("Syntax error : {}: Unexpected token", word)
 }
 
 /*
