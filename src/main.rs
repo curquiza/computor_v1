@@ -1,5 +1,6 @@
 mod lexical_analize;
 mod token;
+// use std::mem;
 
 fn syntax_error_msg(word: &String) -> String {
     format!("Syntax error near \"{}\" token", word)
@@ -17,8 +18,6 @@ fn check_operator_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), S
     if pos == 0 || pos == tokens.len() - 1                                              // at the end or at start
         || token::is_operator(&tokens[pos - 1]) || token::is_operator(&tokens[pos + 1]) {             // sides are operators
         return Err(syntax_error_msg(& tokens[pos].word))
-    // } else if is_operator(&tokens[pos - 1]) || is_operator(&tokens[pos + 1]) {
-        // return Err(syntax_error_msg(& tokens[pos].word))
     } else if token::is_factor_op(&tokens[pos]) {                                              // is FactorOp
         if (token::is_indeterminate(&tokens[pos - 1]) && token::is_indeterminate(&tokens[pos + 1]))   // but sides are
             || (token::is_coefficient(&tokens[pos - 1]) && token::is_coefficient(&tokens[pos + 1])) { // the same
@@ -65,11 +64,12 @@ fn check_syntax(tokens: &Vec<token::Token>) -> Result<(), String> {
     Ok(())
 }
 
-fn exit_with_error(error: String) {
+fn exit_with_error(error: String) -> Result<(), Box<std::error::Error>> {
     eprintln!("{}", error);
+    Err(error.into())
 }
 
-fn main() {
+fn main() -> Result<(), Box<std::error::Error>> {
     let s = "3 + 2 * X^1 - +4 * X + -2 * X^2".to_string();
     // let s = "3.5678 ++ 2a * X^1 - +4 * X + -02 * X^2".to_string();
 
@@ -80,6 +80,7 @@ fn main() {
     if let Err(e) = check_syntax(&tokens) {
         return exit_with_error(e);
     }
+    Ok(())
     // TODO: check exponent du polynome
     // Exemple tests check syntax
     // X * 4 + 4 * X + 5 + 6 * X + X + 3 * X
