@@ -21,8 +21,6 @@ fn main() -> Result<(), Box<std::error::Error>> {
     }
     Ok(())
 
-    // TODO: les - ??
-    // TODO: tests pour tokenize
     // Exemple tests check syntax
     // X * 4 + 4 * X + 5 + 6 * X + X + 3 * X
     // X * X + 4 * X
