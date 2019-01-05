@@ -21,15 +21,18 @@ fn main() -> Result<(), Box<std::error::Error>> {
     }
     Ok(())
 
-    // TODO: check exponent du polynome
+    // TODO: les - ??
+    // TODO: tests pour tokenize
     // Exemple tests check syntax
     // X * 4 + 4 * X + 5 + 6 * X + X + 3 * X
     // X * X + 4 * X
     // 4 * X * 2 + 2
     // 4 *
     // +
+    // TODO: check exponent du polynome (<= 2)
     // TODO: parsing
     // TODO: resoudre
     // TODO: implenter display pour token
     // TODO: retoun erreur du main chelou avec .into()
+    // TODO: change error messages
 }

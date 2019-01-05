@@ -1,4 +1,5 @@
 use crate::token;
+mod test;
 
 fn syntax_error_msg(word: &String) -> String {
     format!("Syntax error near \"{}\" token", word)
@@ -13,7 +14,7 @@ fn syntax_error_msg(word: &String) -> String {
  */
 
 fn check_operator_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), String> {
-    println!("{} is operator", tokens[pos].word);
+    println!("OPERATOR : i = {}, token.word = {}", pos, tokens[pos].word);
     if pos == 0 || pos == tokens.len() - 1                                              // at the end or at start
         || token::is_operator(&tokens[pos - 1]) || token::is_operator(&tokens[pos + 1]) {             // sides are operators
         return Err(syntax_error_msg(& tokens[pos].word))
@@ -34,21 +35,21 @@ fn check_operator_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), S
  ** - if both sides are the same operators, it must be a SeparationOp (+)
  */
 fn check_member_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), String> {
-    println!("{} is member", tokens[pos].word);
+    println!("MEMBER : i = {}, token.word = {}", pos, tokens[pos].word);
     if pos == 0 {                                                           // at start
         if tokens.len() == 1 || token::is_operator(&tokens[pos + 1]) {
             return Ok(())
         }
         return Err(syntax_error_msg(& tokens[pos].word))
-    } else if pos == tokens.len() - 1 {
-        if token::is_member(&tokens[pos - 1]) {      // at the end
+    } else if pos == tokens.len() - 1 {      // at the end
+        if token::is_member(&tokens[pos - 1]) {
             return Err(syntax_error_msg(& tokens[pos].word))
         }
         return Ok(())
     } else if token::is_member(&tokens[pos - 1]) || token::is_member(&tokens[pos + 1]) {  // sides are not operators
         return Err(syntax_error_msg(& tokens[pos].word))
-    } else if tokens[pos - 1].role == tokens[pos + 1].role                  // sides are the same
-                && !token::is_separator_op(&tokens[pos]) {                         // but is not SeparationOp
+    } else if tokens[pos - 1].role == tokens[pos + 1].role                 // sides are the sames
+        && !token::is_separator_op(&tokens[pos - 1]) {             // but is not SeparationOp
         return Err(syntax_error_msg(& tokens[pos].word))
     }
     Ok(())
@@ -56,7 +57,6 @@ fn check_member_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), Str
 
 pub fn check_syntax(tokens: &Vec<token::Token>) -> Result<(), String> {
     for (i, token) in tokens.iter().enumerate() {
-        println!("i = {} !!!", i);
         if token::is_operator(&token) {
             if let Err(e) = check_operator_syntax(i, tokens) {
                 return Err(e)

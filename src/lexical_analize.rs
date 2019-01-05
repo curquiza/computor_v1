@@ -84,15 +84,15 @@ fn test_get_exponent() {
     assert_eq!(get_exponent(&"X^13".to_string()), Ok(13));
     assert_eq!(get_exponent(&"X^1352882".to_string()), Ok(1352882));
 
-    assert!(get_exponent(&"X^".to_string()).is_err(), true);
-    assert!(get_exponent(&"X^^".to_string()).is_err(), true);
-    assert!(get_exponent(&"X^X".to_string()).is_err(), true);
-    assert!(get_exponent(&"X^-1".to_string()).is_err(), true);
-    assert!(get_exponent(&"X^++1".to_string()).is_err(), true);
-    assert!(get_exponent(&"X^a1".to_string()).is_err(), true);
-    assert!(get_exponent(&"X^2.5".to_string()).is_err(), true);
-    assert!(get_exponent(&"X^-2.5".to_string()).is_err(), true);
-    assert!(get_exponent(&"X^1/5".to_string()).is_err(), true);
+    assert!(get_exponent(&"X^".to_string()).is_err());
+    assert!(get_exponent(&"X^^".to_string()).is_err());
+    assert!(get_exponent(&"X^X".to_string()).is_err());
+    assert!(get_exponent(&"X^-1".to_string()).is_err());
+    assert!(get_exponent(&"X^++1".to_string()).is_err());
+    assert!(get_exponent(&"X^a1".to_string()).is_err());
+    assert!(get_exponent(&"X^2.5".to_string()).is_err());
+    assert!(get_exponent(&"X^-2.5".to_string()).is_err());
+    assert!(get_exponent(&"X^1/5".to_string()).is_err());
 }
 
 
