@@ -26,7 +26,6 @@ fn main() -> Result<(), Box<std::error::Error>> {
     };
     Ok(())
 
-    // TODO: check exponent du polynome (<= 2)
     // TODO: parsing
     // TODO: resoudre
     // TODO: implenter display pour token
