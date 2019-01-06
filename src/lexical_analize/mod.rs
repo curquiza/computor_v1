@@ -33,6 +33,9 @@ fn check_exponent(word: &String) -> Result<u32, String> {
     if word == "X" {
         return Ok(1)
     }
+    if word.len() < 2 {
+        return Err("Error when checking exponent in lexical analize".to_string())
+    }
     let substr = &word[2..];
     match substr.parse::<u32>() {
         Err(_) => Err(format!("Lexical error: {}: Invalid exponent", word)),
@@ -59,8 +62,11 @@ fn handle_lexical_errors(token: &mut token::Token) -> Result<(), String> {
 pub fn tokenize(s: String) -> Result<Vec<token::Token>, String> {
     let split = s.split_whitespace();
     let words_vec: Vec<&str> = split.collect();
-    let mut tokens: Vec<token::Token> = Vec::new();
+    if words_vec.len() == 0 {
+        return Err("No equation found".to_string())
+    }
 
+    let mut tokens: Vec<token::Token> = Vec::new();
     for w in words_vec {
         let r: token::Type = get_token_role(w.to_string());
         let mut token = token::Token { word: w.to_string(), role: r, exponent: 0 };
