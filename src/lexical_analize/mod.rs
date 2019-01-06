@@ -29,24 +29,28 @@ fn check_unknown_token(token: &token::Token) -> Result<(), String> {
     }
 }
 
-fn check_exponent(word: &String) -> Result<(), String> {
+fn check_exponent(word: &String) -> Result<u32, String> {
     if word == "X" {
-        return Ok(())
+        return Ok(1)
     }
     let substr = &word[2..];
     match substr.parse::<u32>() {
         Err(_) => Err(format!("Lexical error: {}: Invalid exponent", word)),
-        Ok(_) => Ok(()),
+        Ok(v) => Ok(v),
     }
 }
 
-fn handle_lexical_errors(token: &token::Token) -> Result<(), String> {
+fn handle_lexical_errors(token: &mut token::Token) -> Result<(), String> {
     if let Err(e) = check_unknown_token(&token) {
         return Err(e)
     }
     if token::is_indeterminate(&token) {
-        if let Err(e) = check_exponent(&token.word) {
-            return Err(e);
+        match check_exponent(&token.word) {
+            Err(e) => return Err(e),
+            Ok(v) => {
+                token.exponent = v;
+                return Ok(())
+            }
         }
     }
     Ok(())
@@ -59,9 +63,9 @@ pub fn tokenize(s: String) -> Result<Vec<token::Token>, String> {
 
     for w in words_vec {
         let r: token::Type = get_token_role(w.to_string());
-        let token = token::Token { word: w.to_string(), role: r };
+        let mut token = token::Token { word: w.to_string(), role: r, exponent: 0 };
         println!("{}", token::to_str(&token)); // DEBUG
-        if let Err(e) = handle_lexical_errors(&token) {
+        if let Err(e) = handle_lexical_errors(&mut token) {
             return Err(e);
         }
         tokens.push(token);

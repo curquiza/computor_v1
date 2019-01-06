@@ -40,12 +40,12 @@ mod test {
 
     #[test]
     fn test_check_exponent() {
-        assert!(lexical_analize::check_exponent(&"X".to_string()).is_ok());
-        assert!(lexical_analize::check_exponent(&"X^1".to_string()).is_ok());
-        assert!(lexical_analize::check_exponent(&"X^0".to_string()).is_ok());
-        assert!(lexical_analize::check_exponent(&"X^+1".to_string()).is_ok());
-        assert!(lexical_analize::check_exponent(&"X^13".to_string()).is_ok());
-        assert!(lexical_analize::check_exponent(&"X^1352882".to_string()).is_ok());
+        assert_eq!(lexical_analize::check_exponent(&"X".to_string()), Ok(1));
+        assert_eq!(lexical_analize::check_exponent(&"X^1".to_string()), Ok(1));
+        assert_eq!(lexical_analize::check_exponent(&"X^0".to_string()), Ok(0));
+        assert_eq!(lexical_analize::check_exponent(&"X^+1".to_string()), Ok(1));
+        assert_eq!(lexical_analize::check_exponent(&"X^13".to_string()), Ok(13));
+        assert_eq!(lexical_analize::check_exponent(&"X^1352882".to_string()), Ok(1252882));
 
         assert!(lexical_analize::check_exponent(&"X^".to_string()).is_err());
         assert!(lexical_analize::check_exponent(&"X^^".to_string()).is_err());

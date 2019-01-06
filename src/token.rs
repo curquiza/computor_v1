@@ -8,8 +8,9 @@ pub enum Type {
 }
 
 pub struct Token {
-    pub word: String,
-    pub role: Type
+    pub word:       String,
+    pub role:       Type,
+    pub exponent:   u32
 }
 
 #[allow(dead_code)]
@@ -26,7 +27,7 @@ fn role_to_str(role : &Type) -> &str {
 #[allow(dead_code)]
 pub fn to_str(token: &Token) -> String {
     let s: String = role_to_str(&token.role).to_owned();
-    format!("word = {}, role = {}", token.word, s)
+    format!("word = {}, role = {}, exponent = {}", token.word, s, token.exponent)
 }
 
 #[allow(dead_code)]
