@@ -54,7 +54,7 @@ fn check_operator_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), S
 fn check_member_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), String> {
     println!("MEMBER : i = {}, token.word = {}", pos, tokens[pos].word); //DEBUG
     if pos == 0 {                                                           // at start
-        if tokens.len() == 1 || token::is_operator(&tokens[pos + 1]) {
+        if tokens.len() == 1 || !token::is_member(&tokens[pos + 1]) {
             return Ok(())
         }
         return Err(syntax_error_msg(& tokens[pos].word))
