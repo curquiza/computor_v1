@@ -62,25 +62,28 @@ mod test {
 
     #[test]
     fn test_tokenize() {
-        assert!(lexical_analize::tokenize("X".to_string()).is_ok());
-        assert!(lexical_analize::tokenize("X + 1".to_string()).is_ok());
-        assert!(lexical_analize::tokenize("X^1 + 1".to_string()).is_ok());
+        assert!(lexical_analize::tokenize("X = 0".to_string()).is_ok());
+        assert!(lexical_analize::tokenize("X = 1".to_string()).is_ok());
+        assert!(lexical_analize::tokenize("X^1 + 1 = 0".to_string()).is_ok());
         assert!(lexical_analize::tokenize("+ 1".to_string()).is_ok());
         assert!(lexical_analize::tokenize("- 1".to_string()).is_ok());
-        assert!(lexical_analize::tokenize("-1 - X^2 * * -1".to_string()).is_ok());
-        assert!(lexical_analize::tokenize("+3 - X^2 * - 1".to_string()).is_ok());
-        assert!(lexical_analize::tokenize("123 + X^1 + - 1".to_string()).is_ok());
-        assert!(lexical_analize::tokenize("3 + 2 * X^1 - +4 * X^8 + -2 * X^2".to_string()).is_ok());
+        assert!(lexical_analize::tokenize("-1 - X^2 * * -1 = 0".to_string()).is_ok());
+        assert!(lexical_analize::tokenize("+3 = X^2 * - 1".to_string()).is_ok());
+        assert!(lexical_analize::tokenize("123 + X^1 = -1".to_string()).is_ok());
+        assert!(lexical_analize::tokenize("3  2 * X^1 - +4 * X^8 + -2 * X^2 = 0".to_string()).is_ok());
+        assert!(lexical_analize::tokenize("= 123 + X^1 = -1".to_string()).is_ok());
+        assert!(lexical_analize::tokenize("=".to_string()).is_ok());
 
         assert!(lexical_analize::tokenize("".to_string()).is_err());
-        assert!(lexical_analize::tokenize("X^-1 + 1".to_string()).is_err());
-        assert!(lexical_analize::tokenize("X^2 ** -1".to_string()).is_err());
+        assert!(lexical_analize::tokenize("X^-1 + 1 = 0".to_string()).is_err());
+        assert!(lexical_analize::tokenize("X^2 = ** -1".to_string()).is_err());
         assert!(lexical_analize::tokenize("X^2a * * -1".to_string()).is_err());
-        assert!(lexical_analize::tokenize("X^2 * 21a * -1".to_string()).is_err());
-        assert!(lexical_analize::tokenize("2 + ++3".to_string()).is_err());
+        assert!(lexical_analize::tokenize("X^2 * 21a * -1 = 0".to_string()).is_err());
+        assert!(lexical_analize::tokenize("2 + ++3 = 0".to_string()).is_err());
         assert!(lexical_analize::tokenize("X ^ 2 + 3".to_string()).is_err());
-        assert!(lexical_analize::tokenize("X ^ 2 + 3".to_string()).is_err());
+        assert!(lexical_analize::tokenize("X ^ 2 + 3 = 0".to_string()).is_err());
         assert!(lexical_analize::tokenize("3.5678 ++ 2a * X^1 - +4 * X + -02 * X^2".to_string()).is_err());
-        assert!(lexical_analize::tokenize("X ^ 2 + 3".to_string()).is_err());
+        assert!(lexical_analize::tokenize("X ^ 2 + 3 = 0".to_string()).is_err());
+        assert!(lexical_analize::tokenize("X ^ 2 + 3 == 0".to_string()).is_err());
     }
 }

@@ -9,7 +9,8 @@ fn exit_with_error(error: String) -> Result<(), Box<std::error::Error>> {
 }
 
 fn main() -> Result<(), Box<std::error::Error>> {
-    let s = "3 + 2 * X^1 - +4 * X^8 + -2 * X^2".to_string();
+    // let s = "X = 0".to_string();
+    let s = "3 + 2 * X^1 - +4 * X^8 = -2 * X^2".to_string();
     // let s = "   ".to_string();
     // let s = "3.5678 ++ 2a * X^1 - +4 * X + -02 * X^2".to_string();
 
@@ -26,7 +27,8 @@ fn main() -> Result<(), Box<std::error::Error>> {
     };
     Ok(())
 
-    // TODO: parsing
+    // TODO: arg du main
+    // TODO: parsing + afficher au format reduit
     // TODO: resoudre
     // TODO: implenter display pour token
     // TODO: retoun erreur du main chelou avec .into() -> trouver good way pour retourner des err

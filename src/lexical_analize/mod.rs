@@ -6,6 +6,8 @@ fn get_token_role(s: String) -> token::Type {
         token::Type::SeparationOp
     } else if s == "*" {
         token::Type::FactorOp
+    } else if s == "=" {
+        token::Type::Equal
     } else if s.starts_with("X") {
         if s.len() == 1 {
             token::Type::Indeterminate
