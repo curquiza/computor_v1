@@ -4,7 +4,8 @@ pub enum Type {
     SeparationOp,
     FactorOp,
     Indeterminate,
-    Coefficient
+    Coefficient,
+    Equal
 }
 
 pub struct Token {
@@ -21,6 +22,7 @@ fn role_to_str(role : &Type) -> &str {
         Type::FactorOp => "FactorOp",
         Type::Indeterminate => "Indeterminate",
         Type::Coefficient => "Coefficient",
+        Type::Equal => "Equal",
     }
 }
 
@@ -37,6 +39,9 @@ pub fn display_all(tokens: &Vec<Token>) {
     }
 }
 
+pub fn is_equal(token: &Token) -> bool {
+    token.role == Type::Equal
+}
 pub fn is_separator_op(token: &Token) -> bool {
     token.role == Type::SeparationOp
 }
