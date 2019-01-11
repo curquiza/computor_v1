@@ -39,6 +39,12 @@ pub fn display_all(tokens: &Vec<Token>) {
     }
 }
 
+#[allow(dead_code)]
+pub fn display_all_slice(tokens: &[Token]) {
+    for token in tokens {
+        println!("{}", to_str(&token));
+    }
+}
 pub fn is_equal(token: &Token) -> bool {
     token.role == Type::Equal
 }

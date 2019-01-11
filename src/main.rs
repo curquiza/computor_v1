@@ -25,6 +25,9 @@ fn main() -> Result<(), Box<std::error::Error>> {
     if let Err(e) = equation::get_degree(&tokens) {
         return exit_with_error(e)
     };
+    if let Err(e) = equation::parse(&tokens) {
+        return exit_with_error(e)
+    };
     Ok(())
 
     // TODO: parsing + afficher au format reduit
