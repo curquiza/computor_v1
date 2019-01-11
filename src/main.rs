@@ -1,3 +1,5 @@
+use std::env;
+
 mod token;
 mod lexical_analize;
 mod syntax_analize;
@@ -9,13 +11,11 @@ fn exit_with_error(error: String) -> Result<(), Box<std::error::Error>> {
 }
 
 fn main() -> Result<(), Box<std::error::Error>> {
-    // let s = "X = 0".to_string();
-    let s = "3 + 2 * X^1 - +4 * X^8 = -2 * X^2".to_string();
-    // let s = "   ".to_string();
-    // let s = "3.5678 ++ 2a * X^1 - +4 * X + -02 * X^2".to_string();
-
-    println!("{}", s);
-    let tokens = match lexical_analize::tokenize(s) {
+    let args: Vec<String> = env::args().collect();
+    if args.len() != 2 {
+        return exit_with_error("Error: exactly one command-line argument needed".to_string())
+    }
+    let tokens = match lexical_analize::tokenize(args[1].to_string()) {
         Ok(t) => t,
         Err(e) => return exit_with_error(e),
     };
@@ -27,7 +27,6 @@ fn main() -> Result<(), Box<std::error::Error>> {
     };
     Ok(())
 
-    // TODO: arg du main
     // TODO: parsing + afficher au format reduit
     // TODO: resoudre
     // TODO: implenter display pour token
