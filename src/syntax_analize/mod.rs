@@ -1,8 +1,9 @@
 use crate::token;
 mod test;
 
-fn syntax_error_msg(word: &String) -> String {
-    format!("Syntax error : {}: Unexpected token", word)
+fn syntax_error_msg(word: &String) -> &str {
+    // &format!("Syntax error : {}: Unexpected token", word)
+    "Syntax error : {}: Unexpected token"
 }
 
 /*
@@ -12,11 +13,11 @@ fn syntax_error_msg(word: &String) -> String {
  ** - does not touch any operator
  */
 
-fn check_equal_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), String> {
+fn check_equal_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), &str> {
     println!("EQUAL : i = {}, token.word = {}", pos, tokens[pos].word); //DEBUG
     if pos == 0 || pos == tokens.len() - 1                                              // at the end or at start
         || token::is_operator(&tokens[pos - 1]) || token::is_operator(&tokens[pos + 1]) {             // sides are operators
-        return Err(syntax_error_msg(& tokens[pos].word))
+        return Err(syntax_error_msg(&tokens[pos].word))
     }
     Ok(())
 }
@@ -29,16 +30,16 @@ fn check_equal_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), Stri
  ** - if is a FactorOp, the sides can't be the sames
  */
 
-fn check_operator_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), String> {
+fn check_operator_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), &str> {
     println!("OPERATOR : i = {}, token.word = {}", pos, tokens[pos].word); //DEBUG
     if pos == 0 || pos == tokens.len() - 1                                              // at the end or at start
         || token::is_operator(&tokens[pos - 1]) || token::is_operator(&tokens[pos + 1]) // sides are operators
         || token::is_equal(&tokens[pos - 1]) || token::is_equal(&tokens[pos + 1]) {      // sides are equal symbol
-        return Err(syntax_error_msg(& tokens[pos].word))
+        return Err(syntax_error_msg(&tokens[pos].word))
     } else if token::is_factor_op(&tokens[pos]) {                                              // is FactorOp
         if (token::is_indeterminate(&tokens[pos - 1]) && token::is_indeterminate(&tokens[pos + 1]))   // but sides are
             || (token::is_coefficient(&tokens[pos - 1]) && token::is_coefficient(&tokens[pos + 1])) { // the same
-                return Err(syntax_error_msg(& tokens[pos].word))
+                return Err(syntax_error_msg(&tokens[pos].word))
             }
     }
     Ok(())
@@ -51,35 +52,35 @@ fn check_operator_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), S
  ** - does not touch any other member
  ** - if both sides are the same operators, it must be a SeparationOp (+)
  */
-fn check_member_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), String> {
+fn check_member_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), &str> {
     println!("MEMBER : i = {}, token.word = {}", pos, tokens[pos].word); //DEBUG
     if pos == 0 {                                                           // at start
         if tokens.len() == 1 || !token::is_member(&tokens[pos + 1]) {
             return Ok(())
         }
-        return Err(syntax_error_msg(& tokens[pos].word))
+        return Err(syntax_error_msg(&tokens[pos].word))
     } else if pos == tokens.len() - 1 {      // at the end
         if token::is_member(&tokens[pos - 1]) {
-            return Err(syntax_error_msg(& tokens[pos].word))
+            return Err(syntax_error_msg(&tokens[pos].word))
         }
         return Ok(())
     } else if token::is_member(&tokens[pos - 1]) || token::is_member(&tokens[pos + 1]) {  // sides are not operators
-        return Err(syntax_error_msg(& tokens[pos].word))
+        return Err(syntax_error_msg(&tokens[pos].word))
     } else if tokens[pos - 1].role == tokens[pos + 1].role                 // sides are the sames
         && !token::is_separator_op(&tokens[pos - 1]) {             // but is not SeparationOp
-        return Err(syntax_error_msg(& tokens[pos].word))
+        return Err(syntax_error_msg(&tokens[pos].word))
     }
     Ok(())
 }
 
-fn check_equal_count(tokens: &Vec<token::Token>) -> Result<(), String> {
+fn check_equal_count(tokens: &Vec<token::Token>) -> Result<(), &str> {
     if tokens.iter().filter(|t| t.role == token::Type::Equal).count() == 1 {
         return Ok(())
     }
-    Err("Syntax error: Equation needs exactly one equal condition".to_string())
+    Err("Syntax error: Equation needs exactly one equal condition")
 }
 
-pub fn check_syntax(tokens: &Vec<token::Token>) -> Result<(), String> {
+pub fn check_syntax(tokens: &Vec<token::Token>) -> Result<(), &str> {
     if let Err(e) = check_equal_count(tokens) {
         return Err(e);
     }
