@@ -4,7 +4,7 @@ mod test {
     use crate::lexical_analize;
 
     fn run_one_ok_test(s: &str) {
-        let token_vec = match lexical_analize::tokenize(s.to_string()) {
+        let token_vec = match lexical_analize::tokenize(s) {
             Ok(t) => t,
             Err(_) => return,
         };
@@ -12,7 +12,7 @@ mod test {
     }
 
     fn run_one_failed_test(s: &str) {
-        let token_vec = match lexical_analize::tokenize(s.to_string()) {
+        let token_vec = match lexical_analize::tokenize(s) {
             Ok(t) => t,
             Err(_) => return,
         };
