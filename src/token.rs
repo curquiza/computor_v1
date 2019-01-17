@@ -11,7 +11,7 @@ pub enum Type {
 pub struct Token {
     pub word:       String,
     pub role:       Type,
-    pub exponent:   u32
+    pub exponent:   u32,
 }
 
 use std::fmt;
@@ -80,4 +80,12 @@ pub fn is_unknown(token: &Token) -> bool {
 pub fn is_equal(token: &Token) -> bool {
     // token.role == Type::Equal
     token.word == "="
+}
+
+pub fn is_plus(token: &Token) -> bool {
+    token.word == "+"
+}
+
+pub fn is_minus(token: &Token) -> bool {
+    token.word == "-"
 }

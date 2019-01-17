@@ -18,13 +18,12 @@ fn main() -> Result<(), Box<std::error::Error>> {
     if let Err(e) = syntax_analize::check_syntax(&tokens) {
         return Err(e.into())
     };
-    // if let Err(e) = equation::get_degree(&tokens) {
-    //     return exit_with_error(e)
-    // };
+
+    let eq_components = equation::parse(&tokens);
+    println!("equation components: {:?}", eq_components); //DEBUG
+
     Ok(())
 
-    // TODO: parsing + afficher au format reduit
+    // TODO: afficher au format reduit
     // TODO: resoudre
-    // TODO: implenter display pour token
-    // TODO: retoun erreur du main chelou avec .into() -> trouver good way pour retourner des err
 }

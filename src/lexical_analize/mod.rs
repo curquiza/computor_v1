@@ -77,7 +77,7 @@ pub fn tokenize(s: &str) -> Result<Vec<token::Token>, error::AppError> {
         if let Err(e) = handle_lexical_errors(&mut token) {
             return Err(e);
         }
-        println!("{}", token); //DEBUG
+        // println!("{}", token); //DEBUG
         tokens.push(token);
     }
 

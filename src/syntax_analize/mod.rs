@@ -28,7 +28,7 @@ mod test;
  */
 
 fn check_operator_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), error::AppError> {
-    println!("OPERATOR : i = {}, token.word = {}", pos, tokens[pos].word); //DEBUG
+    // println!("OPERATOR : i = {}, token.word = {}", pos, tokens[pos].word); //DEBUG
     if pos == 0 || pos == tokens.len() - 1                                              // at the end or at start
         || token::is_operator(&tokens[pos - 1]) || token::is_operator(&tokens[pos + 1]) { // sides are operators
         // || token::is_equal(&tokens[pos - 1]) || token::is_equal(&tokens[pos + 1]) {      // sides are equal symbol
@@ -50,7 +50,7 @@ fn check_operator_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), e
  ** - if both sides are the same operators, it must be a SeparationOp (+)
  */
 fn check_member_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), error::AppError> {
-    println!("MEMBER : i = {}, token.word = {}", pos, tokens[pos].word); //DEBUG
+    // println!("MEMBER : i = {}, token.word = {}", pos, tokens[pos].word); //DEBUG
     if pos == 0 {                                                           // at start
         if tokens.len() == 1 || !token::is_member(&tokens[pos + 1]) {
             return Ok(())
