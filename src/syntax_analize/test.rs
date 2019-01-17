@@ -31,6 +31,7 @@ mod test {
         run_one_ok_test("X * 4 = 4 * X + 5 + 6 * X + X + 3 * X");
         run_one_ok_test("-1 * X - 12 * X^2 + X^1244 + -12 * X = 0");
         run_one_ok_test("3 + 2 = 0");
+        run_one_ok_test("12 - X + 2 = X + 12");
 
         run_one_failed_test("* = 0");
         run_one_failed_test("+ = 0");
@@ -57,5 +58,7 @@ mod test {
         run_one_failed_test("1 - = 0 ");
         run_one_failed_test("1 + = 0 ");
         run_one_failed_test("0 = 1 = 0");
+        run_one_failed_test("X * 3 = ");
+        run_one_failed_test("X * 3 = = 2");
     }
 }

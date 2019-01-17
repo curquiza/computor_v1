@@ -2,8 +2,7 @@ use std::error::Error;
 use std::fmt;
 use crate::token;
 
-#[derive(PartialEq)]
-#[derive(Default)]
+#[derive(Default, PartialEq)]
 pub struct AppError {
     pub kind: &'static str,
     pub token: String,

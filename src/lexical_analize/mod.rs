@@ -3,12 +3,13 @@ use crate::error;
 mod test;
 
 fn get_token_role(s: &str) -> token::Type {
-    if s == "+" || s == "-" {
+    // if s == "+" || s == "-" {
+    if s == "+" || s == "-" || s == "=" {
         token::Type::SeparationOp
     } else if s == "*" {
         token::Type::FactorOp
-    } else if s == "=" {
-        token::Type::Equal
+    // } else if s == "=" {
+    //     token::Type::Equal
     } else if s.starts_with("X") {
         if s.len() == 1 {
             token::Type::Indeterminate

@@ -6,9 +6,12 @@ mod test {
     #[test]
     fn test_get_token_role() {
         assert_eq!(lexical_analize::get_token_role("+"),                     token::Type::SeparationOp);
+        assert_eq!(lexical_analize::get_token_role("-"),                     token::Type::SeparationOp);
+        assert_eq!(lexical_analize::get_token_role("="),                     token::Type::SeparationOp);
         assert_eq!(lexical_analize::get_token_role("++"),                    token::Type::Unknown);
         assert_eq!(lexical_analize::get_token_role("+-"),                    token::Type::Unknown);
-        assert_eq!(lexical_analize::get_token_role("+-"),                    token::Type::Unknown);
+        assert_eq!(lexical_analize::get_token_role("--"),                    token::Type::Unknown);
+        assert_eq!(lexical_analize::get_token_role("=="),                    token::Type::Unknown);
 
         assert_eq!(lexical_analize::get_token_role("*"),                     token::Type::FactorOp);
         assert_eq!(lexical_analize::get_token_role("**"),                    token::Type::Unknown);
@@ -33,6 +36,8 @@ mod test {
         assert_eq!(lexical_analize::get_token_role("X^a1"),                  token::Type::Indeterminate);
         assert_eq!(lexical_analize::get_token_role("XX^3"),                  token::Type::Unknown);
         assert_eq!(lexical_analize::get_token_role("-X^3"),                  token::Type::Unknown);
+        assert_eq!(lexical_analize::get_token_role("-X"),                    token::Type::Unknown);
+        assert_eq!(lexical_analize::get_token_role("x^3"),                   token::Type::Unknown);
 
         assert_eq!(lexical_analize::get_token_role("/"),                     token::Type::Unknown);
         assert_eq!(lexical_analize::get_token_role("%"),                     token::Type::Unknown);
