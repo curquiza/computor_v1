@@ -5,7 +5,6 @@ pub enum Type {
     FactorOp,
     Indeterminate,
     Coefficient,
-    // Equal
 }
 
 pub struct Token {
@@ -24,7 +23,6 @@ impl fmt::Display for Type {
             Type::FactorOp => write!(f, "FactorOp"),
             Type::Indeterminate => write!(f, "Indeterminate"),
             Type::Coefficient => write!(f, "Coefficient"),
-            // Type::Equal => write!(f, "Equal"),
         }
     }
 }
@@ -78,7 +76,6 @@ pub fn is_unknown(token: &Token) -> bool {
 }
 
 pub fn is_equal(token: &Token) -> bool {
-    // token.role == Type::Equal
     token.word == "="
 }
 

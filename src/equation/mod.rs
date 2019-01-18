@@ -22,7 +22,7 @@ fn get_coeff_table(tokens: &[token::Token]) -> Vec<i32> {
 }
 
 fn get_exponent(member: &[token::Token]) -> u32 {
-    if token::is_factor_op(&member[0]) {
+    if token::is_coefficient(&member[0]) {
         match member.len() {
             1 => return 0,
             _ => return member[2].exponent
