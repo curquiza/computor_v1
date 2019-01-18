@@ -6,16 +6,18 @@ use crate::token;
 ** PARSING ********************************************************************
 */
 
-fn get_coeff_table(tokens: &[token::Token]) -> Vec<i32> {
-    let mut vec_coeff = Vec::new();
-    vec_coeff.push(1);  // first member
-    for token in tokens {
-        if token::is_plus(&token) {
-            vec_coeff.push(1);
-        } else if token::is_minus(&token) {
-            vec_coeff.push(-1);
-        }
+fn add_coeff_in_table(token: &token::Token, vec_coeff: &mut Vec<i32>) {
+    if token::is_plus(&token) {
+        vec_coeff.push(1);
+    } else if token::is_minus(&token) {
+        vec_coeff.push(-1);
     }
+}
+
+fn get_coeff_table(tokens: &[token::Token]) -> Vec<i32> {
+    let mut vec_coeff: Vec<i32> = Vec::new();
+    vec_coeff.push(1);  // first member
+    tokens.iter().for_each(|token| add_coeff_in_table(token, &mut vec_coeff));
     return vec_coeff;
 }
 
@@ -58,8 +60,8 @@ fn get_coeff(member: &[token::Token]) -> i32 {
 ** side_coeff :
 **      1 if left side of equation, -1 otherwise.
 ** coeff_tab :
-**      coefficients for each equation factor before spliting.
-**      ex : "X * 2 - X" will give [1, -1]
+**      coefficients for each equation factor before spliting (1 or -1).
+**      ex : "X * 2 - X + 8" will give [1, -1, 1]
 */
 
 fn parse_each_factor(member: &[token::Token], pos: usize, components: &mut HashMap<u32, i32>, side_coeff: i32, coeff_tab: &[i32]) {
@@ -84,6 +86,10 @@ pub fn parse(tokens: &Vec<token::Token>) -> HashMap<u32, i32> {
     parse_sub_eq(right, &mut components, -1);
     components
 }
+
+/*
+** DISPLAY ********************************************************************
+*/
 
 /*
 ** SOLVER *********************************************************************
