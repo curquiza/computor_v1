@@ -97,3 +97,19 @@ pub fn too_hight_polynomial_degree() -> AppError {
         ..Default::default()
     }
 }
+
+pub fn when_solving_degree1_eq() -> AppError {
+    AppError {
+        kind: "Solver",
+        message: "Something went wrong when solving degree 1 equation",
+        ..Default::default()
+    }
+}
+
+pub fn when_solving_degree2_eq() -> AppError {
+    AppError {
+        kind: "Solver",
+        message: "Something went wrong when solving degree 2 equation",
+        ..Default::default()
+    }
+}

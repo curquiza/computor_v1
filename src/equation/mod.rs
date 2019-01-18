@@ -130,13 +130,6 @@ pub fn display_reduced_eq(components: &BTreeMap<u32, f64>) {
 ** SOLVER *********************************************************************
 */
 
-// fn comp_expo(coeff: &f64) -> bool {
-//     if *coeff == 0.0 {
-//         return false
-//     };
-//     true
-// }
-
 fn get_polynomial_degree(components: &BTreeMap<u32, f64>) -> u32 {
     // remove all component with a coeff == 0, then select the exponent max.
     match components.iter().filter(|(_, coeff)| **coeff != 0.0).max_by_key(|(expo, _)| *expo) {
@@ -145,37 +138,58 @@ fn get_polynomial_degree(components: &BTreeMap<u32, f64>) -> u32 {
     }
 }
 
-// fn handle_polynomial_degree(components: &BTreeMap<u32, f64>) -> Result<u32, error::AppError> {
-//     let degree = get_polynomial_degree(components);
-//     println!("Polynomial degree: {}", degree);
-//     match degree {
-//         0...2 => { println!("Solving..."); Ok(degree) },
-//         _ => Err(error::too_hight_polynomial_degree())
-//     }
-// }
-
 fn solve_degree_1_equation(components: &BTreeMap<u32, f64>) -> Result<(), error::AppError> {
     let a: f64 = match components.get(&1) {
         None => return Err(error::when_solving_degree1_eq()),
         Some(v) => *v
     };
     let b: f64 = match components.get(&0) {
-        None => 0.00,
+        None => 0.0,
         Some(v) => *v
     };
-    println!("There is an unique solution.");
-    println!("Solution: {}", -1.00 * b / a);
+    println!("Coefficients are : {{ a = {}, b = {} }}", a, b);
+    println!("There is an unique solution.\nSolution: {}", -1.00 * b / a);
     Ok(())
 }
 
+fn display_solution_degree2(a: f64, b: f64, c: f64) {
+    let delta: f64 = b * b - 4.0 * a * c;
+    if delta == 0.0 {
+        println!("Discriminant = delta = b^2 - 4ac = 0");
+        println!("There is an unique solution.");
+        println!("Solution = b^2 / 2a = {}", (-1.0 * b) / (2.0 * a));
+    } else if delta > 0.0 {
+        println!("Discriminant = delta = b^2 - 4ac = {} > 0", delta);
+        println!("There is two solutions.");
+        println!("Solution 1 = (-b + sqrt(delta)) / 2a = {}", 1.0);
+        println!("Solution 2 = (-b - sqrt(delta)) / 2a = {}", 1.0);
+    } else {
+        println!("Discriminant = delta = b^2 - 4ac = {} < 0", delta);
+        println!("There is two complexe solutions.");
+        println!("Solution 1: {} * i", 2.0);
+        println!("Solution 2: {} * i", 2.0);
+    }
+}
+
 fn solve_degree_2_equation(components: &BTreeMap<u32, f64>) -> Result<(), error::AppError> {
+    let a: f64 = match components.get(&2) {
+        None => return Err(error::when_solving_degree2_eq()),
+        Some(v) => *v
+    };
+    let b: f64 = match components.get(&1) {
+        None => 0.0,
+        Some(v) => *v
+    };
+    let c: f64 = match components.get(&0) {
+        None => 0.0,
+        Some(v) => *v
+    };
+    println!("Coefficients are : {{ a = {}, b = {}, c = {} }}", a, b, c);
+    display_solution_degree2(a, b, c);
     Ok(())
 }
 
 pub fn solve(components: &BTreeMap<u32, f64>) -> Result<(), error::AppError> {
-    // if let Err(e) = handle_polynomial_degree(components) {
-    //     return Err(e)
-    // };
     let degree = get_polynomial_degree(components);
     println!("Polynomial degree: {}", degree);
     match degree {
