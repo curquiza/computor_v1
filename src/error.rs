@@ -85,3 +85,15 @@ pub fn unexpected_token(token: &token::Token) -> AppError {
         message: "Unexpected token",
     }
 }
+
+/*
+** SOLVER ERRORS
+*/
+
+pub fn too_hight_polynomial_degree() -> AppError {
+    AppError {
+        kind: "Solver",
+        message: "Polynomial degree must be less or equal than 2",
+        ..Default::default()
+    }
+}

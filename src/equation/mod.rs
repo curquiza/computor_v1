@@ -2,6 +2,7 @@ mod test;
 use std::collections::BTreeMap;
 use crate::token;
 use crate::maths;
+use crate::error;
 
 /*
 ** PARSING ********************************************************************
@@ -112,7 +113,7 @@ fn add_one_factor_to_eq(expo: u32, coeff: f64, s: &mut String) {
     }
 }
 
-fn get_reduced_form(components: BTreeMap<u32, f64>) -> String {
+fn get_reduced_form(components: &BTreeMap<u32, f64>) -> String {
     let mut equation: String = String::new();
     components.iter().for_each(|(expo, coeff)| add_one_factor_to_eq(*expo, *coeff, &mut equation));
     if equation.len() < 2 {
@@ -122,11 +123,34 @@ fn get_reduced_form(components: BTreeMap<u32, f64>) -> String {
     equation[1..end].to_string()
 }
 
-pub fn display_reduced_eq(components: BTreeMap<u32, f64>) {
-    println!("Reduced form: {} = 0", get_reduced_form(components));
+pub fn display_reduced_eq(components: &BTreeMap<u32, f64>) {
+    println!("Reduced form: {} = 0", get_reduced_form(&components));
 }
 
 /*
 ** SOLVER *********************************************************************
 */
 
+fn comp_expo(coeff: &f64) -> bool {
+    if *coeff == 0.0 {
+        return false
+    };
+    true
+}
+
+fn get_polynomial_degree(components: &BTreeMap<u32, f64>) -> u32 {
+    match components.iter().max_by_key(|(_, v)| comp_expo(*v)) {
+        None => 0,
+        Some((expo, _)) => *expo
+    }
+}
+
+pub fn solve(components: &BTreeMap<u32, f64>) -> Result<(), error::AppError> {
+    let degree = get_polynomial_degree(components);
+    println!("Polynomial degree: {}", degree);
+    match degree {
+        0...2 => println!("Solving..."),
+        _ => return Err(error::too_hight_polynomial_degree())
+    }
+    Ok(())
+}

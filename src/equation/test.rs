@@ -42,7 +42,7 @@ mod test {
             Err(_) => return,
         };
         let components = equation::parse(&token_vec);
-        assert_eq!(equation::get_reduced_form(components), rslt);
+        assert_eq!(equation::get_reduced_form(&components), rslt);
     }
 
     #[test]
