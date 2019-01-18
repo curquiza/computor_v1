@@ -31,21 +31,21 @@ fn get_exponent(member: &[token::Token]) -> u32 {
     member[0].exponent
 }
 
-fn parse_int32(word: &str) -> i32 {
-    match word.parse::<i32>() {
-        Err(_) => 0,
+fn parse_f64(word: &str) -> f64 {
+    match word.parse::<f64>() {
+        Err(_) => 0.0,
         Ok(v) => v
     }
 }
 
-fn get_coeff(member: &[token::Token]) -> i32 {
+fn get_coeff(member: &[token::Token]) -> f64 {
     if token::is_indeterminate(&member[0]) {
         match member.len() {
-            1 => return 1,
-            _ => return parse_int32(&member[2].word)
+            1 => return 1.0,
+            _ => return parse_f64(&member[2].word)
         }
     }
-    parse_int32(&member[0].word)
+    parse_f64(&member[0].word)
 }
 
 /*
@@ -64,22 +64,23 @@ fn get_coeff(member: &[token::Token]) -> i32 {
 **      ex : "X * 2 - X + 8" will give [1, -1, 1]
 */
 
-fn parse_each_factor(member: &[token::Token], pos: usize, components: &mut HashMap<u32, i32>, side_coeff: i32, coeff_tab: &[i32]) {
+fn parse_each_factor(member: &[token::Token], pos: usize, components: &mut HashMap<u32, f64>, side_coeff: i32, coeff_tab: &[i32]) {
+    let final_coeff: f64 = (coeff_tab[pos] as f64) * (side_coeff as f64);
     let expo = get_exponent(member);
     match components.contains_key(&expo) {
-        false => components.insert(get_exponent(member), coeff_tab[pos] * side_coeff * get_coeff(member)),
-        true => components.insert(get_exponent(member), components[&expo] + coeff_tab[pos] * side_coeff * get_coeff(member))
+        false => components.insert(get_exponent(member), final_coeff * get_coeff(member)),
+        true => components.insert(get_exponent(member), components[&expo] + final_coeff * get_coeff(member))
     };
 }
 
-fn parse_sub_eq(tokens: &[token::Token], components: &mut HashMap<u32, i32>, side_coeff: i32) {
+fn parse_sub_eq(tokens: &[token::Token], components: &mut HashMap<u32, f64>, side_coeff: i32) {
     let coeff_tab: Vec<i32> = get_coeff_table(tokens);
     let split = tokens.split(|t| token::is_separator_op(&t));
     split.enumerate().for_each(|(pos, member)| parse_each_factor(member, pos, components, side_coeff, &coeff_tab));
 }
 
-pub fn parse(tokens: &Vec<token::Token>) -> HashMap<u32, i32> {
-    let mut components: HashMap<u32, i32> = HashMap::new();
+pub fn parse(tokens: &Vec<token::Token>) -> HashMap<u32, f64> {
+    let mut components: HashMap<u32, f64> = HashMap::new();
     let mut split = tokens.split(|t| token::is_equal(&t));
     let (left, right) = (split.next().unwrap(), split.next().unwrap()); //TODO: Changer le unwrap
     parse_sub_eq(left, &mut components, 1);
