@@ -34,6 +34,8 @@ mod test {
         run_reduced_form_test("X^0 - -1 * X = X", "1");
         run_reduced_form_test("-1 * X^0 - X * -1 = X", "-1");
         run_reduced_form_test("X * -1 - 0 = X", "-2 * X");
+        run_reduced_form_test("42 * X = 42 * X", "0");
+        run_reduced_form_test("42 * X^0 = 42 * X^0", "0");
     }
 
     fn run_get_polynomial_degree_test(s: &str, rslt: u32) {
@@ -56,5 +58,7 @@ mod test {
         run_get_polynomial_degree_test("X^8 * 1 = 1", 8);
         run_get_polynomial_degree_test("X^8 * 0 = X^2", 2);
         run_get_polynomial_degree_test("3 * X^1 + X - 0 = 1 + X^2", 2);
+        run_get_polynomial_degree_test("42 * X = 42 * X", 0);
+        run_get_polynomial_degree_test("42 * X^0 = 42 * X^0", 0);
     }
 }

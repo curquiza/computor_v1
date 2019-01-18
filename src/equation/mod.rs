@@ -130,32 +130,58 @@ pub fn display_reduced_eq(components: &BTreeMap<u32, f64>) {
 ** SOLVER *********************************************************************
 */
 
-fn comp_expo(coeff: &f64) -> bool {
-    if *coeff == 0.0 {
-        return false
-    };
-    true
-}
+// fn comp_expo(coeff: &f64) -> bool {
+//     if *coeff == 0.0 {
+//         return false
+//     };
+//     true
+// }
 
 fn get_polynomial_degree(components: &BTreeMap<u32, f64>) -> u32 {
-    match components.iter().max_by_key(|(_, v)| comp_expo(*v)) {
+    // remove all component with a coeff == 0, then select the exponent max.
+    match components.iter().filter(|(_, coeff)| **coeff != 0.0).max_by_key(|(expo, _)| *expo) {
         None => 0,
         Some((expo, _)) => *expo
     }
 }
 
-fn handle_polynomial_degree(components: &BTreeMap<u32, f64>) -> Result<(), error::AppError> {
-    let degree = get_polynomial_degree(components);
-    println!("Polynomial degree: {}", degree);
-    match degree {
-        0...2 => { println!("Solving..."); Ok(()) },
-        _ => Err(error::too_hight_polynomial_degree())
-    }
+// fn handle_polynomial_degree(components: &BTreeMap<u32, f64>) -> Result<u32, error::AppError> {
+//     let degree = get_polynomial_degree(components);
+//     println!("Polynomial degree: {}", degree);
+//     match degree {
+//         0...2 => { println!("Solving..."); Ok(degree) },
+//         _ => Err(error::too_hight_polynomial_degree())
+//     }
+// }
+
+fn solve_degree_1_equation(components: &BTreeMap<u32, f64>) -> Result<(), error::AppError> {
+    let a: f64 = match components.get(&1) {
+        None => return Err(error::when_solving_degree1_eq()),
+        Some(v) => *v
+    };
+    let b: f64 = match components.get(&0) {
+        None => 0.00,
+        Some(v) => *v
+    };
+    println!("There is an unique solution.");
+    println!("Solution: {}", -1.00 * b / a);
+    Ok(())
+}
+
+fn solve_degree_2_equation(components: &BTreeMap<u32, f64>) -> Result<(), error::AppError> {
+    Ok(())
 }
 
 pub fn solve(components: &BTreeMap<u32, f64>) -> Result<(), error::AppError> {
-    if let Err(e) = handle_polynomial_degree(components) {
-        return Err(e)
-    };
-    Ok(())
+    // if let Err(e) = handle_polynomial_degree(components) {
+    //     return Err(e)
+    // };
+    let degree = get_polynomial_degree(components);
+    println!("Polynomial degree: {}", degree);
+    match degree {
+        0 => { println!("There is no solution."); Ok(()) },
+        1 => solve_degree_1_equation(components),
+        2 => solve_degree_2_equation(components),
+        _ => Err(error::too_hight_polynomial_degree())
+    }
 }
