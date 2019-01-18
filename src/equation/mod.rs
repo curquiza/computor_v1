@@ -111,11 +111,18 @@ fn add_one_factor_to_eq(expo: u32, coeff: f64, s: &mut String) {
     }
 }
 
-pub fn display_reduced_eq(components: BTreeMap<u32, f64>) {
-    let mut equation: String = "Reduced form:".to_string();
+fn get_reduced_form(components: BTreeMap<u32, f64>) -> String {
+    let mut equation: String = String::new();
     components.iter().for_each(|(expo, coeff)| add_one_factor_to_eq(*expo, *coeff, &mut equation));
+    if equation.len() < 2 {
+        return "0".to_string();
+    }
     let end = equation.len() - 2;
-    println!("{} = 0", &equation[0..end]);
+    equation[1..end].to_string()
+}
+
+pub fn display_reduced_eq(components: BTreeMap<u32, f64>) {
+    println!("Reduced form: {} = 0", get_reduced_form(components));
 }
 
 /*
