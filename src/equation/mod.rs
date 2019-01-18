@@ -95,20 +95,19 @@ pub fn parse(tokens: &Vec<token::Token>) -> BTreeMap<u32, f64> {
 */
 
 fn add_one_factor_to_eq(expo: u32, coeff: f64, s: &mut String) {
-    if coeff == 0.0 {
-        return ;
-    }
-    if coeff == 1.0 { // impossible to use float in pattern matching
-        match expo {
-            0 => s.push_str(" 1 +"),
-            1 => s.push_str(" X +"),
-            e => s.push_str(&format!(" X^{} +", e))
-        }
-    } else {
-        match (coeff, expo) {
-            (c, 0) => s.push_str(&format!(" {} +", c)),
-            (c, 1) => s.push_str(&format!(" {} * X +", c)),
-            (c, e) => s.push_str(&format!(" {} * X^{} +", c, e)),
+    if coeff != 0.0 {
+        if coeff == 1.0 { // impossible to use float in pattern matching
+            match expo {
+                0 => s.push_str(" 1 +"),
+                1 => s.push_str(" X +"),
+                e => s.push_str(&format!(" X^{} +", e))
+            }
+        } else {
+            match (coeff, expo) {
+                (c, 0) => s.push_str(&format!(" {} +", c)),
+                (c, 1) => s.push_str(&format!(" {} * X +", c)),
+                (c, e) => s.push_str(&format!(" {} * X^{} +", c, e)),
+            }
         }
     }
 }
@@ -145,12 +144,18 @@ fn get_polynomial_degree(components: &BTreeMap<u32, f64>) -> u32 {
     }
 }
 
-pub fn solve(components: &BTreeMap<u32, f64>) -> Result<(), error::AppError> {
+fn handle_polynomial_degree(components: &BTreeMap<u32, f64>) -> Result<(), error::AppError> {
     let degree = get_polynomial_degree(components);
     println!("Polynomial degree: {}", degree);
     match degree {
-        0...2 => println!("Solving..."),
-        _ => return Err(error::too_hight_polynomial_degree())
+        0...2 => { println!("Solving..."); Ok(()) },
+        _ => Err(error::too_hight_polynomial_degree())
     }
+}
+
+pub fn solve(components: &BTreeMap<u32, f64>) -> Result<(), error::AppError> {
+    if let Err(e) = handle_polynomial_degree(components) {
+        return Err(e)
+    };
     Ok(())
 }
