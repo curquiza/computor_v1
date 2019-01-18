@@ -5,13 +5,12 @@ pub enum Type {
     FactorOp,
     Indeterminate,
     Coefficient,
-    Equal
 }
 
 pub struct Token {
     pub word:       String,
     pub role:       Type,
-    pub exponent:   u32
+    pub exponent:   u32,
 }
 
 use std::fmt;
@@ -24,7 +23,6 @@ impl fmt::Display for Type {
             Type::FactorOp => write!(f, "FactorOp"),
             Type::Indeterminate => write!(f, "Indeterminate"),
             Type::Coefficient => write!(f, "Coefficient"),
-            Type::Equal => write!(f, "Equal"),
         }
     }
 }
@@ -48,9 +46,7 @@ pub fn display_all_slice(tokens: &[Token]) {
         println!("{}", token);
     }
 }
-pub fn is_equal(token: &Token) -> bool {
-    token.role == Type::Equal
-}
+
 pub fn is_separator_op(token: &Token) -> bool {
     token.role == Type::SeparationOp
 }
@@ -77,4 +73,16 @@ pub fn is_member(token: &Token) -> bool {
 
 pub fn is_unknown(token: &Token) -> bool {
     token.role == Type::Unknown
+}
+
+pub fn is_equal(token: &Token) -> bool {
+    token.word == "="
+}
+
+pub fn is_plus(token: &Token) -> bool {
+    token.word == "+"
+}
+
+pub fn is_minus(token: &Token) -> bool {
+    token.word == "-"
 }

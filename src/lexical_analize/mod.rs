@@ -1,13 +1,15 @@
 use crate::token;
+use crate::error;
 mod test;
 
-fn get_token_role(s: String) -> token::Type {
-    if s == "+" || s == "-" {
+fn get_token_role(s: &str) -> token::Type {
+    // if s == "+" || s == "-" {
+    if s == "+" || s == "-" || s == "=" {
         token::Type::SeparationOp
     } else if s == "*" {
         token::Type::FactorOp
-    } else if s == "=" {
-        token::Type::Equal
+    // } else if s == "=" {
+    //     token::Type::Equal
     } else if s.starts_with("X") {
         if s.len() == 1 {
             token::Type::Indeterminate
@@ -23,34 +25,34 @@ fn get_token_role(s: String) -> token::Type {
     }
 }
 
-fn check_unknown_token(token: &token::Token) -> Result<(), String> {
-    if token::is_unknown(&token) {
-        Err(format!("Lexical error: {}: Unexpected token", token.word))
+fn check_unknown_token(token: &token::Token) -> Result<(), error::AppError> {
+    if token::is_unknown(token) {
+        Err(error::unknown_token(token))
     } else {
         Ok(())
     }
 }
 
-fn check_exponent(word: &String) -> Result<u32, String> {
-    if word == "X" {
+fn check_exponent(token: &token::Token) -> Result<u32, error::AppError> {
+    if token.word == "X" {
         return Ok(1)
     }
-    if word.len() < 2 {
-        return Err("Error when checking exponent in lexical analize".to_string())
+    if token.word.len() < 2 {
+        return Err(error::invalid_exponent(token))
     }
-    let substr = &word[2..];
+    let substr = &token.word[2..];
     match substr.parse::<u32>() {
-        Err(_) => Err(format!("Lexical error: {}: Invalid exponent", word)),
+        Err(_) => Err(error::invalid_exponent(token)),
         Ok(v) => Ok(v),
     }
 }
 
-fn handle_lexical_errors(token: &mut token::Token) -> Result<(), String> {
+fn handle_lexical_errors(token: &mut token::Token) -> Result<(), error::AppError> {
     if let Err(e) = check_unknown_token(&token) {
         return Err(e)
     }
     if token::is_indeterminate(&token) {
-        match check_exponent(&token.word) {
+        match check_exponent(&token) {
             Err(e) => return Err(e),
             Ok(v) => {
                 token.exponent = v;
@@ -61,21 +63,21 @@ fn handle_lexical_errors(token: &mut token::Token) -> Result<(), String> {
     Ok(())
 }
 
-pub fn tokenize(s: String) -> Result<Vec<token::Token>, String> {
+pub fn tokenize(s: &str) -> Result<Vec<token::Token>, error::AppError> {
     let split = s.split_whitespace();
     let words_vec: Vec<&str> = split.collect();
     if words_vec.len() == 0 {
-        return Err("Empty argument".to_string())
+        return Err(error::empty_arg())
     }
 
     let mut tokens: Vec<token::Token> = Vec::new();
     for w in words_vec {
-        let r: token::Type = get_token_role(w.to_string());
+        let r: token::Type = get_token_role(w);
         let mut token = token::Token { word: w.to_string(), role: r, exponent: 0 };
         if let Err(e) = handle_lexical_errors(&mut token) {
             return Err(e);
         }
-        println!("{}", token); //DEBUG
+        // println!("{}", token); //DEBUG
         tokens.push(token);
     }
 
