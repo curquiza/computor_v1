@@ -1,5 +1,5 @@
 mod test;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use crate::token;
 
 /*
@@ -64,7 +64,7 @@ fn get_coeff(member: &[token::Token]) -> f64 {
 **      ex : "X * 2 - X + 8" will give [1, -1, 1]
 */
 
-fn parse_each_factor(member: &[token::Token], pos: usize, components: &mut HashMap<u32, f64>, side_coeff: i32, coeff_tab: &[i32]) {
+fn parse_each_factor(member: &[token::Token], pos: usize, components: &mut BTreeMap<u32, f64>, side_coeff: i32, coeff_tab: &[i32]) {
     let final_coeff: f64 = (coeff_tab[pos] as f64) * (side_coeff as f64);
     let expo = get_exponent(member);
     match components.contains_key(&expo) {
@@ -73,14 +73,14 @@ fn parse_each_factor(member: &[token::Token], pos: usize, components: &mut HashM
     };
 }
 
-fn parse_sub_eq(tokens: &[token::Token], components: &mut HashMap<u32, f64>, side_coeff: i32) {
+fn parse_sub_eq(tokens: &[token::Token], components: &mut BTreeMap<u32, f64>, side_coeff: i32) {
     let coeff_tab: Vec<i32> = get_coeff_table(tokens);
     let split = tokens.split(|t| token::is_separator_op(&t));
     split.enumerate().for_each(|(pos, member)| parse_each_factor(member, pos, components, side_coeff, &coeff_tab));
 }
 
-pub fn parse(tokens: &Vec<token::Token>) -> HashMap<u32, f64> {
-    let mut components: HashMap<u32, f64> = HashMap::new();
+pub fn parse(tokens: &Vec<token::Token>) -> BTreeMap<u32, f64> {
+    let mut components: BTreeMap<u32, f64> = BTreeMap::new();
     let mut split = tokens.split(|t| token::is_equal(&t));
     let (left, right) = (split.next().unwrap(), split.next().unwrap()); //TODO: Changer le unwrap
     parse_sub_eq(left, &mut components, 1);
@@ -91,6 +91,32 @@ pub fn parse(tokens: &Vec<token::Token>) -> HashMap<u32, f64> {
 /*
 ** DISPLAY ********************************************************************
 */
+
+fn add_one_factor_to_eq(expo: u32, coeff: f64, s: &mut String) {
+    if coeff == 0.0 {
+        return ;
+    }
+    if coeff == 1.0 { // impossible to use float in pattern matching
+        match expo {
+            0 => s.push_str(" 1 +"),
+            1 => s.push_str(" X +"),
+            e => s.push_str(&format!(" X^{} +", e))
+        }
+    } else {
+        match (coeff, expo) {
+            (c, 0) => s.push_str(&format!(" {} +", c)),
+            (c, 1) => s.push_str(&format!(" {} * X +", c)),
+            (c, e) => s.push_str(&format!(" {} * X^{} +", c, e)),
+        }
+    }
+}
+
+pub fn display_reduced_eq(components: BTreeMap<u32, f64>) {
+    let mut equation: String = "Reduced form:".to_string();
+    components.iter().for_each(|(expo, coeff)| add_one_factor_to_eq(*expo, *coeff, &mut equation));
+    let end = equation.len() - 2;
+    println!("{} = 0", &equation[0..end]);
+}
 
 /*
 ** SOLVER *********************************************************************

@@ -21,6 +21,7 @@ fn main() -> Result<(), Box<std::error::Error>> {
 
     let eq_components = equation::parse(&tokens);
     println!("equation components: {:?}", eq_components); //DEBUG
+    equation::display_reduced_eq(eq_components);
 
     Ok(())
 
