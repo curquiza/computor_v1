@@ -5,6 +5,7 @@ mod token;
 mod lexical_analize;
 mod syntax_analize;
 mod equation;
+mod maths;
 
 fn main() -> Result<(), Box<std::error::Error>> {
     let args: Vec<String> = env::args().collect();
