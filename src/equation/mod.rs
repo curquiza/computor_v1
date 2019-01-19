@@ -152,23 +152,46 @@ fn solve_degree_1_equation(components: &BTreeMap<u32, f64>) -> Result<(), error:
     Ok(())
 }
 
-fn display_solution_degree2(a: f64, b: f64, c: f64) {
+fn display_solution_zero_delta(a: f64, b: f64) {
+    println!("Discriminant = delta = b^2 - 4ac = 0");
+    println!("There is an unique solution.");
+    println!("Solution = b^2 / 2a = {}", (-1.0 * b) / (2.0 * a));
+}
+
+fn display_solution_positive_delta(a: f64, b: f64, delta: f64, delta_sqrt: f64) {
+    println!("Discriminant = delta = b^2 - 4ac = {} > 0", delta);
+    println!("sqrt(delta) = {}", delta_sqrt);
+    println!("There is two solutions.");
+    println!("Solution 1 = (-b + sqrt(delta)) / 2a = {}", (-1.0 * b + delta_sqrt) / (2.0 * a));
+    println!("Solution 2 = (-b - sqrt(delta)) / 2a = {}", (-1.0 * b - delta_sqrt) / (2.0 * a));
+}
+
+fn display_solution_negative_delta(a: f64, b: f64, delta: f64, delta_sqrt: f64) {
+    println!("Discriminant = delta = b^2 - 4ac = {} < 0", delta);
+    println!("sqrt(|delta|) = {}", delta_sqrt);
+    println!("There is two complexe solutions.");
+    println!("Solution 1 = (-b + sqrt(|delta|) * i) / 2a = -b / 2a + i * (sqrt(|delta|) / 2a) = {} + i * {}", -1.0 * b / (2.0 * a), delta_sqrt / (2.0 * a));
+    println!("Solution 2 = (-b - sqrt(|delta|) * i) / 2a = -b / 2a - i * (sqrt(|delta|) / 2a) = {} - i * {}", -1.0 * b / (2.0 * a), delta_sqrt / (2.0 * a));
+}
+
+fn display_solution_degree2(a: f64, b: f64, c: f64) -> Result<(), error::AppError> {
     let delta: f64 = b * b - 4.0 * a * c;
     if delta == 0.0 {
-        println!("Discriminant = delta = b^2 - 4ac = 0");
-        println!("There is an unique solution.");
-        println!("Solution = b^2 / 2a = {}", (-1.0 * b) / (2.0 * a));
+        display_solution_zero_delta(a, b);
     } else if delta > 0.0 {
-        println!("Discriminant = delta = b^2 - 4ac = {} > 0", delta);
-        println!("There is two solutions.");
-        println!("Solution 1 = (-b + sqrt(delta)) / 2a = {}", 1.0);
-        println!("Solution 2 = (-b - sqrt(delta)) / 2a = {}", 1.0);
+        let delta_sqrt = match maths::sqrt(delta) {
+            None => return Err(error::when_solving_degree2_eq()),
+            Some(v) => v
+        };
+        display_solution_positive_delta(a, b, delta, delta_sqrt);
     } else {
-        println!("Discriminant = delta = b^2 - 4ac = {} < 0", delta);
-        println!("There is two complexe solutions.");
-        println!("Solution 1: {} * i", 2.0);
-        println!("Solution 2: {} * i", 2.0);
+        let delta_sqrt = match maths::sqrt(delta.abs()) {
+            None => return Err(error::when_solving_degree2_eq()),
+            Some(v) => v
+        };
+        display_solution_negative_delta(a, b, delta, delta_sqrt);
     }
+    Ok(())
 }
 
 fn solve_degree_2_equation(components: &BTreeMap<u32, f64>) -> Result<(), error::AppError> {
@@ -185,7 +208,9 @@ fn solve_degree_2_equation(components: &BTreeMap<u32, f64>) -> Result<(), error:
         Some(v) => *v
     };
     println!("Coefficients are : {{ a = {}, b = {}, c = {} }}", a, b, c);
-    display_solution_degree2(a, b, c);
+    if let Err(e) = display_solution_degree2(a, b, c) {
+        return Err(e)
+    };
     Ok(())
 }
 
