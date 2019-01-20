@@ -70,9 +70,10 @@ fn get_coeff(member: &[token::Token]) -> f64 {
 fn parse_each_factor(member: &[token::Token], pos: usize, components: &mut BTreeMap<u32, f64>, side_coeff: i32, coeff_tab: &[i32]) {
     let final_coeff: f64 = (coeff_tab[pos] as f64) * (side_coeff as f64);
     let expo = get_exponent(member);
-    match components.contains_key(&expo) {
-        false => components.insert(get_exponent(member), final_coeff * get_coeff(member)),
-        true => components.insert(get_exponent(member), components[&expo] + final_coeff * get_coeff(member))
+    if components.contains_key(&expo) {
+        components.insert(get_exponent(member), components[&expo] + final_coeff * get_coeff(member))
+    } else {
+        components.insert(get_exponent(member), final_coeff * get_coeff(member))
     };
 }
 

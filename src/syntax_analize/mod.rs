@@ -34,14 +34,16 @@ fn check_operator_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), e
 fn check_member_syntax(pos: usize, tokens: &Vec<token::Token>) -> Result<(), error::AppError> {
     // println!("MEMBER : i = {}, token.word = {}", pos, tokens[pos].word); //DEBUG
     if pos == 0 {                                                           // at start
-        match tokens.len() == 1 || !token::is_member(&tokens[pos + 1]) {
-            true => return Ok(()),
-            false => return Err(error::unexpected_token(&tokens[pos]))
+        if tokens.len() == 1 || !token::is_member(&tokens[pos + 1]) {
+            return Ok(())
+        } else {
+            return Err(error::unexpected_token(&tokens[pos]))
         }
     } else if pos == tokens.len() - 1 {                                     // at the end
-        match token::is_member(&tokens[pos - 1]) {
-            true => return Err(error::unexpected_token(&tokens[pos])),
-            false => return Ok(())
+        if token::is_member(&tokens[pos - 1]) {
+            return Err(error::unexpected_token(&tokens[pos]))
+        } else {
+            return Ok(())
         }
     } else if token::is_member(&tokens[pos - 1]) || token::is_member(&tokens[pos + 1])                      // sides are not operators
         || (tokens[pos - 1].role == tokens[pos + 1].role && !token::is_separator_op(&tokens[pos - 1])) {    // sides are the same BUT not SeparationOp
