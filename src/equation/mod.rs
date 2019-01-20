@@ -185,7 +185,7 @@ fn display_solution_degree2(a: f64, b: f64, c: f64) -> Result<(), error::AppErro
         };
         display_solution_positive_delta(a, b, delta, delta_sqrt);
     } else {
-        let delta_sqrt = match maths::sqrt(delta.abs()) {
+        let delta_sqrt = match maths::sqrt(maths::abs(delta)) {
             None => return Err(error::when_solving_degree2_eq()),
             Some(v) => v
         };
