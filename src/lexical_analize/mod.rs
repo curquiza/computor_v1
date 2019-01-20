@@ -75,6 +75,5 @@ pub fn tokenize(s: &str) -> Result<Vec<token::Token>, error::AppError> {
         }
         tokens.push(token);
     }
-
     Ok(tokens)
 }

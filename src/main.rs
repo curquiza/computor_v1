@@ -19,9 +19,9 @@ fn main() -> Result<(), Box<std::error::Error>> {
     if let Err(e) = syntax_analize::check_syntax(&tokens) {
         return Err(e.into())
     };
-    let eq_components = equation::parse(&tokens);
+    let eq_components = equation::parsing::decompose(&tokens);
     equation::display_reduced_eq(&eq_components);
-    if let Err(e) = equation::solve(&eq_components) {
+    if let Err(e) = equation::solver::display_rslt(&eq_components) {
         return Err(e.into());
     }
     Ok(())
