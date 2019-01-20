@@ -148,7 +148,7 @@ fn solve_degree_1_equation(components: &BTreeMap<u32, f64>) -> Result<(), error:
         Some(v) => *v
     };
     println!("Coefficients are : {{ a = {}, b = {} }}", a, b);
-    println!("There is an unique solution.\nSolution: {}", -1.00 * b / a);
+    println!("There is an unique solution.\nSolution = {}", -1.0 * b / a);
     Ok(())
 }
 
@@ -160,16 +160,16 @@ fn display_solution_zero_delta(a: f64, b: f64) {
 
 fn display_solution_positive_delta(a: f64, b: f64, delta: f64, delta_sqrt: f64) {
     println!("Discriminant = delta = b^2 - 4ac = {} > 0", delta);
-    println!("sqrt(delta) = {}", delta_sqrt);
     println!("There is two solutions.");
+    println!("sqrt(delta) = {}", delta_sqrt);
     println!("Solution 1 = (-b + sqrt(delta)) / 2a = {}", (-1.0 * b + delta_sqrt) / (2.0 * a));
     println!("Solution 2 = (-b - sqrt(delta)) / 2a = {}", (-1.0 * b - delta_sqrt) / (2.0 * a));
 }
 
 fn display_solution_negative_delta(a: f64, b: f64, delta: f64, delta_sqrt: f64) {
     println!("Discriminant = delta = b^2 - 4ac = {} < 0", delta);
-    println!("sqrt(|delta|) = {}", delta_sqrt);
     println!("There is two complexe solutions.");
+    println!("sqrt(|delta|) = {}", delta_sqrt);
     println!("Solution 1 = (-b + sqrt(|delta|) * i) / 2a = -b / 2a + i * (sqrt(|delta|) / 2a) = {} + i * {}", -1.0 * b / (2.0 * a), delta_sqrt / (2.0 * a));
     println!("Solution 2 = (-b - sqrt(|delta|) * i) / 2a = -b / 2a - i * (sqrt(|delta|) / 2a) = {} - i * {}", -1.0 * b / (2.0 * a), delta_sqrt / (2.0 * a));
 }
