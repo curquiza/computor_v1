@@ -23,9 +23,10 @@ fn get_token_role(s: &str) -> token::Type {
 }
 
 fn check_unknown_token(token: &token::Token) -> Result<(), error::AppError> {
-    match token::is_unknown(token) {
-        true => Err(error::unknown_token(token)),
-        false => Ok(())
+    if token::is_unknown(token) {
+        Err(error::unknown_token(token))
+    } else {
+        Ok(())
     }
 }
 
