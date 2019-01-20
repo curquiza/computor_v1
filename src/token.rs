@@ -33,6 +33,12 @@ impl fmt::Display for Token {
     }
 }
 
+impl fmt::Debug for Token {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "token::Token {{ word = {}, role = {}, exponent = {} }}", self.word, self.role, self.exponent)
+    }
+}
+
 #[allow(dead_code)]
 pub fn display_all(tokens: &Vec<Token>) {
     for token in tokens {

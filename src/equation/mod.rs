@@ -81,10 +81,22 @@ fn parse_sub_eq(tokens: &[token::Token], components: &mut BTreeMap<u32, f64>, si
     split.enumerate().for_each(|(pos, member)| parse_each_factor(member, pos, components, side_coeff, &coeff_tab));
 }
 
+fn get_left_and_right(tokens: &Vec<token::Token>) -> (&[token::Token], &[token::Token]) {
+    let mut split = tokens.split(|t| token::is_equal(&t));
+    let left: &[token::Token] = match split.nth(0) {
+        None => &[],
+        Some(v) => v
+    };
+    let right: &[token::Token] = match split.last() {
+        None => &[],
+        Some(v) => v
+    };
+    (left, right)
+}
+
 pub fn parse(tokens: &Vec<token::Token>) -> BTreeMap<u32, f64> {
     let mut components: BTreeMap<u32, f64> = BTreeMap::new();
-    let mut split = tokens.split(|t| token::is_equal(&t));
-    let (left, right) = (split.next().unwrap(), split.next().unwrap()); //TODO: Changer le unwrap
+    let (left, right) = get_left_and_right(&tokens);
     parse_sub_eq(left, &mut components, 1);
     parse_sub_eq(right, &mut components, -1);
     components

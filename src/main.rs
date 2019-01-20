@@ -20,12 +20,9 @@ fn main() -> Result<(), Box<std::error::Error>> {
         return Err(e.into())
     };
     let eq_components = equation::parse(&tokens);
-    // println!("equation components: {:?}", eq_components); //DEBUG
     equation::display_reduced_eq(&eq_components);
     if let Err(e) = equation::solve(&eq_components) {
         return Err(e.into());
     }
     Ok(())
-
-    // TODO: resoudre
 }
