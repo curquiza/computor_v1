@@ -4,16 +4,28 @@ GREEN="\033[1;32m"
 RED="\033[1;31m"
 DEF="\033[0m"
 
-answer_degree0="There is no solution"
+answer_degree0_no="There is no solution"
+answer_degree0_all="All real numbers are solution"
 answer_degree1="There is an unique solution"
 answer_degree2_zero="There is an unique solution"
 answer_degree2_pos="There is two solutions."
 answer_degree2_neg="There is two complexe solutions"
 
-# run_test_0 "equation"
-function run_test_0() {
+# run_test_0_no_sol "equation"
+function run_test_0_no_sol() {
     local output=$(cargo run -- "$1" 2>&1)
-    local answer=$(echo "$output" | grep "$answer_degree0")
+    local answer=$(echo "$output" | grep "$answer_degree0_no")
+    if [[ "$answer" != "" ]]; then
+        printf "%-50s$GREEN%s$DEF\n" "$1" "OK"
+    else
+        printf "%-50s$RED%s$DEF\n" "$1" "KO"
+    fi
+}
+
+# run_test_0_all_sol "equation"
+function run_test_0_all_sol() {
+    local output=$(cargo run -- "$1" 2>&1)
+    local answer=$(echo "$output" | grep "$answer_degree0_all")
     if [[ "$answer" != "" ]]; then
         printf "%-50s$GREEN%s$DEF\n" "$1" "OK"
     else
@@ -72,14 +84,17 @@ function run_test_2_neg() {
 }
 
 echo "*** DEGREE 0 ***"
-run_test_0 "42 * X^1 = 42 * X"
-run_test_0 "42 * X^0 = 42 * X^0"
-run_test_0 "0 * X^453 = 5"
-run_test_0 "0 = 0"
-run_test_0 "0 = 1"
-run_test_0 "-1 = 1"
-run_test_0 "5 * X^0 = 5 * X^0"
-run_test_0 "4 * X^0 = 8 * X^0"
+run_test_0_all_sol "42 * X^1 = 42 * X"
+run_test_0_all_sol "42 * X^0 = 42 * X^0"
+run_test_0_no_sol  "0 * X^453 = 5"
+run_test_0_all_sol "0 * X^453 = 0"
+run_test_0_no_sol  "0 = 0"
+run_test_0_no_sol  "0 = 1"
+run_test_0_no_sol "-1 = 1"
+run_test_0_all_sol "5 * X^0 = 5 * X^0"
+run_test_0_all_sol "5 * X^0 + X^2 = 5 * X^0 + X^2"
+run_test_0_no_sol "5 * X^0 + X^2 = 5 * X^0 + X^2 + 1"
+run_test_0_no_sol "4 * X^0 = 8 * X^0"
 
 echo "\n*** DEGREE 1 ***"
 run_test_1 "X + 1 = 0"                          "-1"
