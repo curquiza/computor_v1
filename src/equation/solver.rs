@@ -107,6 +107,6 @@ pub fn display_rslt(components: &BTreeMap<u32, f64>) -> Result<(), error::AppErr
         0 => solve_degree_0_equation(components),
         1 => solve_degree_1_equation(components),
         2 => solve_degree_2_equation(components),
-        _ => Err(error::too_hight_polynomial_degree())
+        _ => Err(error::too_high_polynomial_degree())
     }
 }
