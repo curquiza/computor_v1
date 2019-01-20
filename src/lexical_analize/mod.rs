@@ -3,13 +3,10 @@ use crate::error;
 mod test;
 
 fn get_token_role(s: &str) -> token::Type {
-    // if s == "+" || s == "-" {
     if s == "+" || s == "-" || s == "=" {
         token::Type::SeparationOp
     } else if s == "*" {
         token::Type::FactorOp
-    // } else if s == "=" {
-    //     token::Type::Equal
     } else if s.starts_with("X") {
         if s.len() == 1 {
             token::Type::Indeterminate
@@ -26,10 +23,9 @@ fn get_token_role(s: &str) -> token::Type {
 }
 
 fn check_unknown_token(token: &token::Token) -> Result<(), error::AppError> {
-    if token::is_unknown(token) {
-        Err(error::unknown_token(token))
-    } else {
-        Ok(())
+    match token::is_unknown(token) {
+        true => Err(error::unknown_token(token)),
+        false => Ok(())
     }
 }
 
@@ -77,9 +73,7 @@ pub fn tokenize(s: &str) -> Result<Vec<token::Token>, error::AppError> {
         if let Err(e) = handle_lexical_errors(&mut token) {
             return Err(e);
         }
-        // println!("{}", token); //DEBUG
         tokens.push(token);
     }
-
     Ok(tokens)
 }

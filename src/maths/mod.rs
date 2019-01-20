@@ -1,5 +1,12 @@
 mod test;
 
+pub fn abs(n: f64) -> f64 {
+    match n {
+        v if v < 0.0 => -1.0 * v,
+        v => v,
+    }
+}
+
 fn first_guess(r: f64) -> f64 {
     let rslt: f64 = (r / 2.0).floor();
     if rslt == 0.0 {
@@ -16,7 +23,7 @@ fn babylonian_method(r: f64) -> f64 {
     let epsilon: f64 = 1e-10; // precision
     let mut x: f64 = first_guess(r);
     let mut prev: f64 = 0.0;
-    while (x - prev).abs() > epsilon {
+    while abs(x - prev) > epsilon {
         prev = x;
         x = (prev + (r / prev)) / 2.0;
     }

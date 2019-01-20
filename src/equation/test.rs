@@ -8,7 +8,7 @@ mod test {
             Ok(t) => t,
             Err(_) => return,
         };
-        let components = equation::parse(&token_vec);
+        let components = equation::parsing::decompose(&token_vec);
         assert_eq!(equation::get_reduced_form(&components), rslt);
     }
 
@@ -43,8 +43,8 @@ mod test {
             Ok(t) => t,
             Err(_) => return,
         };
-        let components = equation::parse(&token_vec);
-        assert_eq!(equation::get_polynomial_degree(&components), rslt);
+        let components = equation::parsing::decompose(&token_vec);
+        assert_eq!(equation::solver::get_polynomial_degree(&components), rslt);
     }
 
     #[test]
