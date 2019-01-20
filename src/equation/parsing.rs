@@ -1,5 +1,13 @@
 use crate::token;
+use crate::error;
 use std::collections::BTreeMap;
+
+fn check_variable_existence(tokens: &Vec<token::Token>) -> Result<(), error::AppError>{
+    match tokens.iter().filter(|t| token::is_indeterminate(&t)).count() {
+        0 => Err(error::no_indeterminate_variable()),
+        _ => Ok(())
+    }
+}
 
 fn add_coeff_in_table(token: &token::Token, vec_coeff: &mut Vec<i32>) {
     if token::is_plus(&token) {
@@ -87,10 +95,13 @@ fn get_left_and_right(tokens: &Vec<token::Token>) -> (&[token::Token], &[token::
     (left, right)
 }
 
-pub fn decompose(tokens: &Vec<token::Token>) -> BTreeMap<u32, f64> {
+pub fn decompose(tokens: &Vec<token::Token>) -> Result<BTreeMap<u32, f64>, error::AppError> {
+    if let Err(e) = check_variable_existence(&tokens) {
+        return Err(e)
+    }
     let (left, right) = get_left_and_right(&tokens);
     let mut components: BTreeMap<u32, f64> = BTreeMap::new();
     parse_sub_eq(left, &mut components, 1);
     parse_sub_eq(right, &mut components, -1);
-    components
+    Ok(components)
 }

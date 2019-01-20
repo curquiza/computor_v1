@@ -67,6 +67,18 @@ pub fn invalid_exponent(token: &token::Token) -> AppError {
 }
 
 /*
+** PARSING ERRORS
+*/
+
+pub fn no_indeterminate_variable() -> AppError {
+    AppError {
+        kind: "Parsing",
+        message: "No indeterminated variable found. No equation to solve.",
+        ..Default::default()
+    }
+}
+
+/*
 ** SYNTAX ERRORS
 */
 
