@@ -95,8 +95,8 @@ fn get_left_and_right(tokens: &Vec<token::Token>) -> (&[token::Token], &[token::
 }
 
 pub fn parse(tokens: &Vec<token::Token>) -> BTreeMap<u32, f64> {
-    let mut components: BTreeMap<u32, f64> = BTreeMap::new();
     let (left, right) = get_left_and_right(&tokens);
+    let mut components: BTreeMap<u32, f64> = BTreeMap::new();
     parse_sub_eq(left, &mut components, 1);
     parse_sub_eq(right, &mut components, -1);
     components
